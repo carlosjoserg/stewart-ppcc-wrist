@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <xacro:macro name="stewart_wrist" params="name parent color">
+  
+    <joint name="${parent}_${name}_base_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+    </joint>
+
+    <link name="${name}_link">
+      <visual>
+	      <geometry>
+          <mesh filename="package://stewart_ppcc_wrist/model/meshes/stewart_wrist.stl"/>
+	      </geometry>
+        <material name="${color}" />
+      </visual>
+    </link>
+    
+  </xacro:macro>
+
+</robot>
+
