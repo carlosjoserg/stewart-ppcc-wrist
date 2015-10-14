@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="probe">
+
+	<xacro:include filename="$(find stewart_ppcc_wrist)/model/stewart_wrist.urdf.xacro"/>
+
+	<link name="world"/>
+
+	<xacro:stewart_wrist parent="world" name="probe">
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+	</xacro:stewart_wrist>
+
+</robot>

@@ -1,22 +1,35 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="my_probe">
   
-  <xacro:macro name="stewart_wrist" params="name parent color">
+  <xacro:include filename="$(find stewart_ppcc_wrist)/model/materials.urdf"/>
+
+  <xacro:include filename="$(find force_torque_sensor)/model/ft_sensor.urdf.xacro"/>
+  <xacro:include filename="$(find intrinsic_tactile_toolbox)/model/tip.urdf.xacro"/>
+
+  <xacro:macro name="stewart_wrist" params="name parent *origin">
   
     <joint name="${parent}_${name}_base_joint" type="fixed">
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <parent link="${parent}"/>
-      <child link="${name}_link"/>
+      <child link="${name}_base"/>
     </joint>
 
-    <link name="${name}_link">
+    <link name="${name}_base">
       <visual>
-	      <geometry>
+        <geometry>
           <mesh filename="package://stewart_ppcc_wrist/model/meshes/stewart_wrist.stl"/>
-	      </geometry>
-        <material name="${color}" />
+        </geometry>
+        <material name="Stewart/Orange"/>     
       </visual>
     </link>
+
+    <xacro:ft_sensor parent="${name}_base" name="${name}_ft_sensor" type="nano17">
+      <origin xyz="0 0 0.11486" rpy="0 0 0"/>
+    </xacro:ft_sensor>
+
+    <xacro:tip parent="${name}_ft_sensor_nano17_measure" name="${name}_tip" type="semi_spherical">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:tip>
     
   </xacro:macro>
 

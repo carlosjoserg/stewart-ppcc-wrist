@@ -1,3 +1,22 @@
 <launch>
 
+	<param name="robot_description" command="$(find xacro)/xacro.py $(find stewart_ppcc_wrist)/robot/stewart_wrist_solo.urdf.xacro"/>
+
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+
+	<param name="publish_frequency" value="100"/>
+	<node name="robot_tf_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+	<include file="$(find force_torque_sensor)/launch/ft_sensor_hw.launch.xml">
+		<arg name="ip" value="192.168.1.204"/>
+		<arg name="name" value="probe_ft_sensor" />
+		<arg name="type" value="nano17" />
+	</include>
+
+	<node pkg="intrinsic_tactile_toolbox" name="intrinsic_tactile" type="intrinsic_tactile_node" respawn="true" output="screen">
+		<remap from="/FT_sensor_readings" to="/probe_ft_sensor/sensor_measurements"/>
+		<param name="sensor_frame_name" value="/probe_ft_sensor_nano17_measure" />
+		<param name="gauss_frame_name" value="/gauss_frame" />
+	</node>
+
 </launch>
