@@ -19,17 +19,46 @@
         <geometry>
           <mesh filename="package://stewart_ppcc_wrist/model/meshes/stewart_wrist.stl"/>
         </geometry>
-        <material name="Stewart/Orange"/>     
+        <material name="Stewart/Orange"/>
       </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://stewart_ppcc_wrist/model/meshes/collision/stewart_wrist_CH.stl" scale="1.15 1.15 1.15"/>
+        </geometry>
+        <material name="Stewart/Orange"/>
+      </collision>
     </link>
 
     <xacro:ft_sensor parent="${name}_base" name="${name}_ft_sensor" type="nano17">
-      <origin xyz="0 0 0.11486" rpy="0 0 -0.254303118"/>
+      <!-- origin xyz="0 0 0.11486" rpy="0 0 -0.254303118"/ -->
+      <origin xyz="0 0 0.19586" rpy="0 0 -0.254303118"/>
     </xacro:ft_sensor>
 
     <xacro:tip parent="${name}_ft_sensor_nano17_measure" name="${name}_tip" type="semi_spherical">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:tip>
+
+    <!-- branched to avoid problems with chains -->
+    <joint name="${parent}_${name}_extension_joint" type="fixed">
+      <origin xyz="0 0 0.15536" rpy="0 0 0"/>
+      <parent link="${name}_base"/>
+      <child link="${name}_extension"/>
+    </joint>
+
+    <link name="${name}_extension">
+      <visual>
+        <geometry>
+          <cylinder radius="0.0085" length="0.081"/>
+        </geometry>
+        <material name="Stewart/Black"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="0.0085" length="0.081"/>
+        </geometry>
+        <material name="Stewart/Black"/>
+      </collision>
+    </link>
     
   </xacro:macro>
 
