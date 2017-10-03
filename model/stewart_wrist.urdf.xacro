@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="my_probe">
-  
+
   <xacro:include filename="$(find stewart_ppcc_wrist)/model/materials.urdf"/>
 
   <xacro:include filename="$(find force_torque_sensor)/model/ft_sensor.urdf.xacro"/>
   <xacro:include filename="$(find intrinsic_tactile_toolbox)/model/tip.urdf.xacro"/>
 
   <xacro:macro name="stewart_wrist" params="name parent *origin">
-  
+
     <joint name="${parent}_${name}_base_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <xacro:insert_block name="origin"/>
       <parent link="${parent}"/>
       <child link="${name}_base"/>
     </joint>
@@ -17,21 +17,21 @@
     <link name="${name}_base">
       <visual>
         <geometry>
-          <mesh filename="package://stewart_ppcc_wrist/model/meshes/stewart_wrist.stl"/>
+          <mesh filename="package://stewart_ppcc_wrist/model/meshes/base.stl" scale="0.001 0.001 0.001"/>
         </geometry>
-        <material name="Stewart/Orange"/>
+        <material name="Stewart/White"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="package://stewart_ppcc_wrist/model/meshes/collision/stewart_wrist_CH.stl" scale="1.15 1.15 1.15"/>
+          <mesh filename="package://stewart_ppcc_wrist/model/meshes/collision/base_CH.stl" scale="0.00115 0.00115 0.00115"/>
         </geometry>
-        <material name="Stewart/Orange"/>
+        <material name="Stewart/White"/>
       </collision>
     </link>
 
     <xacro:ft_sensor parent="${name}_base" name="${name}_ft_sensor" type="nano17">
-      <!-- origin xyz="0 0 0.11486" rpy="0 0 -0.254303118"/ -->
-      <origin xyz="0 0 0.19586" rpy="0 0 -0.254303118"/>
+      <origin xyz="0 0 0.14" rpy="0 0 1.658062444"/>
+      <!-- origin xyz="0 0 0.19586" rpy="0 0 -0.254303118"/ -->
     </xacro:ft_sensor>
 
     <xacro:tip parent="${name}_ft_sensor_nano17_measure" name="${name}_tip" type="semi_spherical">
@@ -40,7 +40,7 @@
 
     <!-- branched to avoid problems with chains -->
     <joint name="${parent}_${name}_extension_joint" type="fixed">
-      <origin xyz="0 0 0.15536" rpy="0 0 0"/>
+      <origin xyz="0 0 0.095" rpy="0 0 0"/>
       <parent link="${name}_base"/>
       <child link="${name}_extension"/>
     </joint>
@@ -48,19 +48,40 @@
     <link name="${name}_extension">
       <visual>
         <geometry>
-          <cylinder radius="0.0085" length="0.081"/>
+          <mesh filename="package://stewart_ppcc_wrist/model/meshes/platform.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="Stewart/White"/>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://stewart_ppcc_wrist/model/meshes/collision/platform_CH.stl" scale="0.00115 0.00115 0.00115"/>
+        </geometry>
+        <material name="Stewart/White"/>
+      </collision>
+    </link>
+
+    <!-- branched to avoid problems with chains -->
+    <joint name="${parent}_${name}_shit_joint" type="fixed">
+      <origin xyz="0.06 0 -0.025" rpy="0 0 0"/>
+      <parent link="${name}_base"/>
+      <child link="${name}_shit"/>
+    </joint>
+
+    <link name="${name}_shit">
+      <visual>
+        <geometry>
+          <box size="0.1 0.2 0.09"/>
         </geometry>
         <material name="Stewart/Black"/>
       </visual>
       <collision>
         <geometry>
-          <cylinder radius="0.0085" length="0.081"/>
+          <box size="0.1 0.2 0.09"/>
         </geometry>
         <material name="Stewart/Black"/>
       </collision>
     </link>
-    
+
   </xacro:macro>
 
 </robot>
-
